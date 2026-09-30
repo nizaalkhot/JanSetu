@@ -1,6 +1,8 @@
 # JanSetu: Citizen-to-Policy Intelligence for BRICS
 > *"From a citizen's voice to a national budget line."*
 
+🌐 **Live Google Cloud Deployment:** [https://jansetu-518872797698.asia-south1.run.app](https://jansetu-518872797698.asia-south1.run.app)
+
 JanSetu is a sovereign Digital Public Good (DPG) that turns citizen grievances across BRICS languages and dialects into evidence-backed, explainable development priorities, compares demand against infrastructure supply and budgets, and measures whether resulting investments worked.
 
 ---
