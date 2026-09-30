@@ -24,5 +24,5 @@ COPY . .
 # Expose Cloud Run default port
 EXPOSE 8080
 
-# Run the FastAPI server and Command Centre UI
-CMD ["python", "-m", "uvicorn", "apps.api.main:app", "--host", "0.0.0.0", "--port", "8080"]
+# Run the FastAPI server and Command Centre UI dynamically binding to $PORT
+CMD exec uvicorn apps.api.main:app --host 0.0.0.0 --port ${PORT:-8080}
