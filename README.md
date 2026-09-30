@@ -5,6 +5,14 @@ JanSetu is a sovereign Digital Public Good (DPG) that turns citizen grievances a
 
 ---
 
+## 📹 Working Demo Video
+
+A full session walkthrough demonstrating the Google ADK Multi-Agent pipeline, What-If simulation, Copilot, and Command Centre is available in [`media/jansetu_demo_walkthrough.webp`](media/jansetu_demo_walkthrough.webp):
+
+![JanSetu Working Demo](media/jansetu_demo_walkthrough.webp)
+
+---
+
 ## 🏛️ What Was Built
 
 Following the specification in [`PLAN.md`](PLAN.md), the repository contains an end-to-end, runnable implementation:
