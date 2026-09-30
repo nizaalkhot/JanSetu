@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JanSetu — Citizen-to-Policy Intelligence for BRICS</title>
+  <meta name="description" content="Sovereign Digital Public Good closing the loop from citizen voice to national budget line using Google Agent Development Kit (ADK).">
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <!-- Tailwind CDN for fast styling -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eff6ff',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+            },
+            saffron: {
+              400: '#fb923c',
+              500: '#f97316',
+            },
+            emeraldAccent: {
+              400: '#34d399',
+              500: '#10b981',
+            },
+            darkBg: '#0b0f19',
+            cardBg: '#131b2e',
+            cardBorder: '#1e293b'
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Outfit', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background: radial-gradient(circle at 15% 15%, #131c33 0%, #080c16 65%, #05070d 100%);
+      color: #f1f5f9;
+      min-height: 100vh;
+    }
+    .glass-card {
+      background: rgba(19, 27, 46, 0.75);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+    }
+    .glass-nav {
+      background: rgba(11, 15, 25, 0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .pulse-glow {
+      animation: pulse-ring 2.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+    }
+    @keyframes pulse-ring {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 14px rgba(59, 130, 246, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+    }
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #0b0f19; }
+    ::-webkit-scrollbar-thumb { background: #26334d; border-radius: 4px; }
+  </style>
+</head>
+<body class="font-sans antialiased selection:bg-blue-600 selection:text-white">
+
+  <!-- Top Sovereign Header -->
+  <header class="glass-nav sticky top-0 z-50 px-6 py-3 flex items-center justify-between">
+    <div class="flex items-center space-x-3">
+      <div class="h-10 w-10 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-500 to-amber-500 flex items-center justify-center shadow-lg shadow-blue-500/20 font-display font-extrabold text-white text-xl">
+        JS
+      </div>
+      <div>
+        <div class="flex items-center space-x-2">
+          <span class="font-display font-bold text-xl tracking-tight text-white">JanSetu</span>
+          <span class="px-2 py-0.5 text-[10px] font-semibold bg-blue-500/20 text-blue-400 border border-blue-500/30 rounded-full uppercase tracking-wider">BRICS Sovereign DPI</span>
+        </div>
+        <p class="text-xs text-slate-400 font-medium">From a citizen's voice to a national budget line</p>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <nav class="hidden md:flex items-center space-x-1 bg-slate-900/60 p-1 rounded-xl border border-slate-800">
+      <button onclick="switchTab('dashboard')" id="tab-btn-dashboard" class="px-4 py-1.5 rounded-lg text-xs font-semibold transition-all bg-blue-600 text-white shadow-sm">
+        Command Centre
+      </button>
+      <button onclick="switchTab('intake')" id="tab-btn-intake" class="px-4 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-300 hover:text-white hover:bg-slate-800">
+        Citizen Intake Portal
+      </button>
+      <button onclick="switchTab('simulator')" id="tab-btn-simulator" class="px-4 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-300 hover:text-white hover:bg-slate-800">
+        What-If Simulator
+      </button>
+      <button onclick="switchTab('copilot')" id="tab-btn-copilot" class="px-4 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-300 hover:text-white hover:bg-slate-800">
+        Ask JanSetu Copilot
+      </button>
+      <button onclick="switchTab('impact')" id="tab-btn-impact" class="px-4 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-300 hover:text-white hover:bg-slate-800">
+        Impact Loop
+      </button>
+      <button onclick="switchTab('federation')" id="tab-btn-federation" class="px-4 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-300 hover:text-white hover:bg-slate-800">
+        BRICS Federation
+      </button>
+    </nav>
+
+    <!-- Right System Status Badge -->
+    <div class="flex items-center space-x-3">
+      <div class="flex items-center space-x-1.5 bg-emerald-500/10 border border-emerald-500/30 px-3 py-1 rounded-full">
+        <span class="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span class="text-xs font-medium text-emerald-400">Google ADK Live</span>
+      </div>
+      <div class="text-xs text-slate-400 border-l border-slate-700 pl-3">
+        Node: <span class="text-slate-200 font-mono">IN-Central-01</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-6">
+
+    <!-- TAB 1: COMMAND CENTRE DASHBOARD -->
+    <section id="section-dashboard" class="space-y-6">
+      
+      <!-- Top Metrics Banner -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="glass-card rounded-2xl p-5 border-l-4 border-l-blue-500">
+          <div class="flex justify-between items-start">
+            <div>
+              <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Citizen Voice Ingestion</p>
+              <h3 class="text-2xl font-bold font-display text-white mt-1">28,450</h3>
+              <p class="text-xs text-emerald-400 mt-1 flex items-center">
+                <span>↑ 18.4%</span>
+                <span class="text-slate-400 ml-1">via WhatsApp & Voice</span>
+              </p>
+            </div>
+            <div class="p-2.5 rounded-xl bg-blue-500/10 text-blue-400">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 100-6 3 3 0 000 6z"></path></svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-card rounded-2xl p-5 border-l-4 border-l-amber-500">
+          <div class="flex justify-between items-start">
+            <div>
+              <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Highest Unmet Gap</p>
+              <h3 class="text-2xl font-bold font-display text-amber-400 mt-1">100 / 100</h3>
+              <p class="text-xs text-slate-400 mt-1">Clean Water • Bundelkhand</p>
+            </div>
+            <div class="p-2.5 rounded-xl bg-amber-500/10 text-amber-400">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-card rounded-2xl p-5 border-l-4 border-l-emerald-500">
+          <div class="flex justify-between items-start">
+            <div>
+              <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Unspent Fiscal Headroom</p>
+              <h3 class="text-2xl font-bold font-display text-emerald-400 mt-1">₹ 86.5 Cr</h3>
+              <p class="text-xs text-slate-400 mt-1">Across 4 Pilot Districts</p>
+            </div>
+            <div class="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-400">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-card rounded-2xl p-5 border-l-4 border-l-indigo-500">
+          <div class="flex justify-between items-start">
+            <div>
+              <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Audited Projects</p>
+              <h3 class="text-2xl font-bold font-display text-white mt-1">12 Active</h3>
+              <p class="text-xs text-indigo-400 mt-1">Critic Agent Equity Verified</p>
+            </div>
+            <div class="p-2.5 rounded-xl bg-indigo-500/10 text-indigo-400">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Command Grid: Hotspots Map & Priority Recommendations -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Left: Sovereign Hotspots Visualizer (7 cols) -->
+        <div class="lg:col-span-7 glass-card rounded-2xl p-6 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+            <div>
+              <h2 class="text-lg font-bold font-display text-white">Demand-vs-Supply Gap Command Map</h2>
+              <p class="text-xs text-slate-400">Real-time geo-located citizen distress cross-referenced with infrastructure indices</p>
+            </div>
+            <span class="px-2.5 py-1 text-xs rounded-full bg-slate-800 text-slate-300 border border-slate-700 font-mono">Layer: Unmet Gap</span>
+          </div>
+
+          <!-- Interactive Hotspot List / Visual Pins -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="hotspots-container">
+            <!-- Loaded via JS -->
+            <div class="p-4 rounded-xl bg-slate-900/50 border border-slate-800 animate-pulse">Loading Hotspots...</div>
+          </div>
+
+          <!-- Methodology Alert Box -->
+          <div class="p-3.5 rounded-xl bg-blue-950/30 border border-blue-800/40 text-xs text-slate-300 flex items-start space-x-3">
+            <svg class="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <div>
+              <span class="font-semibold text-blue-300">Explainable Gap Engine:</span>
+              <code class="text-slate-300 font-mono ml-1">Gap = Demand Intensity × (Pop / 10k)^0.5 ÷ Supply Index</code>.
+              Equity weighting ensures silent, non-digitized rural villages get boosted priority over loud metropolitan complaints.
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Top Actionable Policy Cards (5 cols) -->
+        <div class="lg:col-span-5 glass-card rounded-2xl p-6 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+            <div>
+              <h2 class="text-lg font-bold font-display text-white">AI Policy Recommendations</h2>
+              <p class="text-xs text-slate-400">Synthesized by ADK Policy Agent & Critic Loop</p>
+            </div>
+            <span class="px-2 py-0.5 text-[11px] rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">Action Required</span>
+          </div>
+
+          <!-- Recommendations Feed -->
+          <div class="space-y-3" id="recommendations-container">
+            <!-- Loaded via JS -->
+            <div class="p-4 rounded-xl bg-slate-900/50 border border-slate-800 animate-pulse">Loading recommendations...</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: CITIZEN INTAKE PORTAL & VOICE SIMULATOR -->
+    <section id="section-intake" class="hidden space-y-6">
+      <div class="glass-card rounded-2xl p-6 sm:p-8 space-y-6">
+        <div class="border-b border-slate-800 pb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+          <div>
+            <h2 class="text-xl font-bold font-display text-white">Citizen Voice & Grievance Intake Portal</h2>
+            <p class="text-xs text-slate-400">Low-literacy, voice-first intake simulation over WhatsApp, IVR, Telegram, or Web</p>
+          </div>
+          <span class="px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 text-xs border border-blue-500/20 font-mono">Channel Gateway: Active</span>
+        </div>
+
+        <!-- Simulator Controls -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+          
+          <!-- Left: Audio / Input Form (6 cols) -->
+          <div class="md:col-span-6 space-y-4">
+            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">Select Pre-Recorded Voice Note (BRICS Dialects)</label>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <button onclick="loadSamplePreset('bundeli')" class="text-left p-3 rounded-xl bg-slate-900/70 border border-slate-800 hover:border-blue-500 transition text-xs space-y-1">
+                <div class="font-semibold text-blue-400 flex items-center justify-between">
+                  <span>Bundeli / Hindi Voice</span>
+                  <span class="text-[10px] bg-blue-900/40 text-blue-300 px-1.5 py-0.5 rounded">WhatsApp Audio</span>
+                </div>
+                <p class="text-slate-400 line-clamp-2">"हमार गांव तिंदवारी में तीन महीने से हैंडपंप खराब पड़ा बा..."</p>
+              </button>
+
+              <button onclick="loadSamplePreset('portuguese')" class="text-left p-3 rounded-xl bg-slate-900/70 border border-slate-800 hover:border-emerald-500 transition text-xs space-y-1">
+                <div class="font-semibold text-emerald-400 flex items-center justify-between">
+                  <span>Portuguese / Nordestino</span>
+                  <span class="text-[10px] bg-emerald-900/40 text-emerald-300 px-1.5 py-0.5 rounded">IVR Voice</span>
+                </div>
+                <p class="text-slate-400 line-clamp-2">"Aqui no sítio perto de Petrolina, o caminhão-pipa não aparece..."</p>
+              </button>
+
+              <button onclick="loadSamplePreset('hinglish')" class="text-left p-3 rounded-xl bg-slate-900/70 border border-slate-800 hover:border-amber-500 transition text-xs space-y-1">
+                <div class="font-semibold text-amber-400 flex items-center justify-between">
+                  <span>Hinglish (Code-Mixed)</span>
+                  <span class="text-[10px] bg-amber-900/40 text-amber-300 px-1.5 py-0.5 rounded">Telegram Bot</span>
+                </div>
+                <p class="text-slate-400 line-clamp-2">"Banda Naraini road pe bahut bade bade potholes ho gaye hain..."</p>
+              </button>
+
+              <button onclick="loadSamplePreset('southafrica')" class="text-left p-3 rounded-xl bg-slate-900/70 border border-slate-800 hover:border-indigo-500 transition text-xs space-y-1">
+                <div class="font-semibold text-indigo-400 flex items-center justify-between">
+                  <span>Eastern Cape / English</span>
+                  <span class="text-[10px] bg-indigo-900/40 text-indigo-300 px-1.5 py-0.5 rounded">PWA Web</span>
+                </div>
+                <p class="text-slate-400 line-clamp-2">"Mthatha rural clinic has only one nurse and no ARV medicines..."</p>
+              </button>
+            </div>
+
+            <!-- Custom Input Field -->
+            <div class="space-y-2">
+              <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">Or Submit Raw Citizen Text / Transcript</label>
+              <textarea id="intake-text-input" rows="4" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl p-3 text-sm text-slate-200 focus:outline-none focus:border-blue-500 font-sans" placeholder="Speak or type citizen grievance here in any language or dialect..."></textarea>
+            </div>
+
+            <!-- Metadata parameters -->
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-400 uppercase">Reported Village / District</label>
+                <input id="intake-location-input" type="text" value="Tindwari, Banda" class="mt-1 w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-200">
+              </div>
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-400 uppercase">Channel Protocol</label>
+                <select id="intake-channel-select" class="mt-1 w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-200">
+                  <option value="whatsapp_audio">WhatsApp Voice Note</option>
+                  <option value="ivr_voice">IVR Toll-Free Call</option>
+                  <option value="telegram">Telegram Bot</option>
+                  <option value="pwa_form">PWA Web Form</option>
+                </select>
+              </div>
+            </div>
+
+            <button onclick="executeAgentPipeline()" id="btn-run-pipeline" class="w-full py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-semibold text-sm shadow-lg shadow-blue-500/25 transition flex items-center justify-center space-x-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+              <span>Run Google ADK Multi-Agent Pipeline</span>
+            </button>
+          </div>
+
+          <!-- Right: Live Multi-Agent Execution Telemetry (6 cols) -->
+          <div class="md:col-span-6 space-y-4 bg-slate-950/60 rounded-xl p-5 border border-slate-800">
+            <h3 class="text-xs font-semibold text-slate-300 uppercase tracking-wider flex items-center justify-between">
+              <span>Agent Execution Pipeline</span>
+              <span id="pipeline-status-badge" class="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-400 font-mono">Idle</span>
+            </h3>
+
+            <!-- Stage Tracker -->
+            <div class="space-y-2 text-xs" id="agent-stage-list">
+              <div class="flex items-center space-x-2 text-slate-500" id="stage-intake">
+                <span class="w-5 h-5 rounded-full border border-slate-700 flex items-center justify-center text-[10px]">1</span>
+                <span>Intake Agent: Audio transcription & normalization</span>
+              </div>
+              <div class="flex items-center space-x-2 text-slate-500" id="stage-language">
+                <span class="w-5 h-5 rounded-full border border-slate-700 flex items-center justify-center text-[10px]">2</span>
+                <span>Language Agent: Multilingual dialect detection & English pivot</span>
+              </div>
+              <div class="flex items-center space-x-2 text-slate-500" id="stage-classifier">
+                <span class="w-5 h-5 rounded-full border border-slate-700 flex items-center justify-center text-[10px]">3</span>
+                <span>Classifier Agent: UN SDG taxonomy & urgency rating</span>
+              </div>
+              <div class="flex items-center space-x-2 text-slate-500" id="stage-geo">
+                <span class="w-5 h-5 rounded-full border border-slate-700 flex items-center justify-center text-[10px]">4</span>
+                <span>Geo Agent: Admin boundary & sovereign coordinates</span>
+              </div>
+              <div class="flex items-center space-x-2 text-slate-500" id="stage-analyst">
+                <span class="w-5 h-5 rounded-full border border-slate-700 flex items-center justify-center text-[10px]">5</span>
+                <span>Analyst Agent: Mathematical Gap & Priority scoring</span>
+              </div>
+              <div class="flex items-center space-x-2 text-slate-500" id="stage-policy">
+                <span class="w-5 h-5 rounded-full border border-slate-700 flex items-center justify-center text-[10px]">6</span>
+                <span>Policy Drafting Agent: Project brief & budget head</span>
+              </div>
+              <div class="flex items-center space-x-2 text-slate-500" id="stage-critic">
+                <span class="w-5 h-5 rounded-full border border-slate-700 flex items-center justify-center text-[10px]">7</span>
+                <span>Critic Agent: Digital-divide bias & equity audit</span>
+              </div>
+              <div class="flex items-center space-x-2 text-slate-500" id="stage-feedback">
+                <span class="w-5 h-5 rounded-full border border-slate-700 flex items-center justify-center text-[10px]">8</span>
+                <span>Citizen Feedback Agent: Native language response loop</span>
+              </div>
+            </div>
+
+            <!-- Output Box -->
+            <div id="pipeline-output-box" class="mt-4 p-4 rounded-xl bg-slate-900 border border-slate-800 text-xs font-mono text-slate-300 hidden max-h-64 overflow-y-auto space-y-2">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: WHAT-IF SIMULATOR -->
+    <section id="section-simulator" class="hidden space-y-6">
+      <div class="glass-card rounded-2xl p-6 sm:p-8 space-y-6">
+        <div class="border-b border-slate-800 pb-4">
+          <h2 class="text-xl font-bold font-display text-white">What-If Policy & Budget Simulator</h2>
+          <p class="text-xs text-slate-400">Model the systemic impact of capital expenditure allocations on citizen distress gaps before committing funds</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+          <!-- Controls (5 cols) -->
+          <div class="md:col-span-5 space-y-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 uppercase">Target Administrative Region</label>
+              <select id="sim-region-select" class="mt-1 w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-slate-200">
+                <option value="IN-UP-BAN">Banda (Bundelkhand), India</option>
+                <option value="IN-MH-BEE">Beed (Marathwada), India</option>
+                <option value="BR-PE-PET">Petrolina (Sertão), Brazil</option>
+                <option value="ZA-EC-ORT">OR Tambo District, South Africa</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 uppercase">Target Infrastructure Sector</label>
+              <select id="sim-sector-select" class="mt-1 w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-slate-200">
+                <option value="water_sanitation">Clean Water & Sanitation (SDG 6)</option>
+                <option value="healthcare">Healthcare & PHCs (SDG 3)</option>
+                <option value="transport_roads">Roads & Connectivity (SDG 9)</option>
+                <option value="education">Quality Education (SDG 4)</option>
+                <option value="digital_connectivity">Digital Public Infrastructure (SDG 9)</option>
+              </select>
+            </div>
+
+            <div>
+              <div class="flex justify-between items-center text-xs">
+                <span class="font-semibold text-slate-300 uppercase">Additional Capital Outlay</span>
+                <span id="sim-budget-label" class="text-blue-400 font-mono font-bold">₹ 15.0 Cr</span>
+              </div>
+              <input id="sim-budget-slider" type="range" min="1" max="50" value="15" step="1" oninput="updateBudgetSliderLabel(this.value)" class="w-full mt-2 accent-blue-500">
+            </div>
+
+            <button onclick="triggerSimulation()" class="w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition">
+              Run Micro-Economic Simulation
+            </button>
+          </div>
+
+          <!-- Simulation Result Display (7 cols) -->
+          <div class="md:col-span-7 glass-card rounded-xl p-6 space-y-4 bg-slate-900/40">
+            <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Projected Policy Outcomes</h3>
+            <div id="sim-results-container" class="space-y-4">
+              <div class="p-8 text-center text-slate-500 text-xs">
+                Click "Run Micro-Economic Simulation" to evaluate supply curve shifts and gap mitigation.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: ASK JANSETU COPILOT -->
+    <section id="section-copilot" class="hidden space-y-6">
+      <div class="glass-card rounded-2xl p-6 sm:p-8 space-y-4">
+        <div class="border-b border-slate-800 pb-4">
+          <h2 class="text-xl font-bold font-display text-white">Ask JanSetu — Sovereign Policymaker Copilot</h2>
+          <p class="text-xs text-slate-400">Natural-language question answering grounded in citizen distress signals, census demographic data, and fiscal ledgers</p>
+        </div>
+
+        <!-- Chat Container -->
+        <div id="copilot-chat-history" class="h-96 overflow-y-auto space-y-3 p-4 rounded-xl bg-slate-950/70 border border-slate-800 font-sans text-xs">
+          <!-- Initial Welcome Message -->
+          <div class="p-4 rounded-xl bg-blue-950/30 border border-blue-900/40 text-slate-300 space-y-2">
+            <div class="flex items-center space-x-2 text-blue-400 font-semibold">
+              <span class="h-2 w-2 rounded-full bg-blue-400"></span>
+              <span>JanSetu Intelligence Copilot Ready</span>
+            </div>
+            <p>I am grounded in official BRICS data and citizen signals. Try asking:</p>
+            <div class="flex flex-wrap gap-2 pt-1">
+              <button onclick="askCopilotPreset('Which districts have the highest water distress?')" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-[11px] text-slate-200 border border-slate-700">"Which districts have the highest water distress?"</button>
+              <button onclick="askCopilotPreset('What is the unspent budget headroom across regions?')" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-[11px] text-slate-200 border border-slate-700">"What is the unspent budget headroom?"</button>
+              <button onclick="askCopilotPreset('Compare Petrolina with Banda on clean water supply.')" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-[11px] text-slate-200 border border-slate-700">"Compare Petrolina (Brazil) with Banda (India)"</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Input Bar -->
+        <div class="flex space-x-2">
+          <input id="copilot-input" type="text" onkeydown="if(event.key==='Enter') sendCopilotQuery()" placeholder="Ask any question about citizen demand, infrastructure gaps, or budgets..." class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-blue-500">
+          <button onclick="sendCopilotQuery()" class="px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition">
+            Send
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 5: IMPACT LOOP -->
+    <section id="section-impact" class="hidden space-y-6">
+      <div class="glass-card rounded-2xl p-6 sm:p-8 space-y-6">
+        <div class="border-b border-slate-800 pb-4">
+          <h2 class="text-xl font-bold font-display text-white">The Impact Loop: Did the Investment Work?</h2>
+          <p class="text-xs text-slate-400">Section 2 & 3.E: Measuring complaint volume collapse and sentiment turnaround following project delivery</p>
+        </div>
+
+        <div id="impact-metrics-container" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- Loaded via JS -->
+          <div class="p-6 rounded-xl bg-slate-900 border border-slate-800 animate-pulse text-xs text-slate-400">Loading impact records...</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 6: BRICS FEDERATION -->
+    <section id="section-federation" class="hidden space-y-6">
+      <div class="glass-card rounded-2xl p-6 sm:p-8 space-y-6">
+        <div class="border-b border-slate-800 pb-4">
+          <h2 class="text-xl font-bold font-display text-white">BRICS Sovereign Federation Layer</h2>
+          <p class="text-xs text-slate-400">Privacy-preserving Agent-to-Agent (A2A) protocol enabling cross-border development learning without citizen PII transfer</p>
+        </div>
+
+        <!-- Federation Nodes Table -->
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs text-slate-300">
+            <thead class="bg-slate-900/80 text-slate-400 uppercase text-[10px] tracking-wider border-b border-slate-800">
+              <tr>
+                <th class="p-3">BRICS Member</th>
+                <th class="p-3">Responsible Ministry / Node</th>
+                <th class="p-3">Privacy & Sovereignty Compliance</th>
+                <th class="p-3">Anonymized Signals Shared</th>
+                <th class="p-3">Node Status</th>
+              </tr>
+            </thead>
+            <tbody id="federation-table-body" class="divide-y divide-slate-800">
+              <!-- Loaded via JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Cross Country Best Practice Cards -->
+        <div class="pt-4 border-t border-slate-800 space-y-3">
+          <h3 class="text-xs font-semibold text-slate-300 uppercase tracking-wider">Cross-Country Transferable Policy Recipes</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-2 text-xs">
+              <div class="flex items-center justify-between text-blue-400 font-semibold">
+                <span>Semi-Arid Drought Mitigation: Brazil ⇄ India</span>
+                <span class="text-[10px] bg-blue-900/30 text-blue-300 px-2 py-0.5 rounded">Water Reticulation</span>
+              </div>
+              <p class="text-slate-300">
+                Brazilian Caatinga decentralized cistern construction standards ("1 Milhão de Cisternas") adapted for Bundelkhand's black cotton soil, combined with Indian Jal Jeevan solar mini-piped IoT telemetry sensors.
+              </p>
+              <div class="text-[11px] text-emerald-400 font-medium">Achieved average 84.7% citizen distress reduction</div>
+            </div>
+
+            <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-2 text-xs">
+              <div class="flex items-center justify-between text-indigo-400 font-semibold">
+                <span>Rural Healthcare Tele-Diagnostics: South Africa ⇄ India</span>
+                <span class="text-[10px] bg-indigo-900/30 text-indigo-300 px-2 py-0.5 rounded">Primary Health</span>
+              </div>
+              <p class="text-slate-300">
+                Indian Ayushman Bharat cloud tele-consultation kiosks adapted for Eastern Cape's single-nurse mountainous clinics, combined with South Africa's centralized chronic medicine dispensing lockers.
+              </p>
+              <div class="text-[11px] text-emerald-400 font-medium">Achieved average 67.2% reduction in clinic wait turnaround</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Interactive Scripts -->
+  <script>
+    const samplePresets = {
+      bundeli: {
+        text: "हमार गांव तिंदवारी में तीन महीने से हैंडपंप खराब पड़ा बा। पानी के लिए तीन किलोमीटर दूर तालाब जाना पड़ता है, बच्चे बीमार हो रहे हैं। कोई अधिकारी नहीं सुन रहा।",
+        location: "Tindwari, Banda",
+        channel: "whatsapp_audio"
+      },
+      portuguese: {
+        text: "Aqui no sítio perto de Petrolina, o caminhão-pipa não aparece há mais de vinte dias. A cisterna comunitária secou completamente e o posto de saúde está sem água potável.",
+        location: "Petrolina, Pernambuco",
+        channel: "ivr_voice"
+      },
+      hinglish: {
+        text: "Banda Naraini road pe bahut bade bade potholes ho gaye hain. Last week ek pregnant woman ko hospital le jaate waqt accident hote hote bacha. Urgent repairs chahiye.",
+        location: "Naraini Road, Banda",
+        channel: "telegram"
+      },
+      southafrica: {
+        text: "Mthatha rural clinic has only one sister nurse and no antiretroviral and hypertension medicines in stock. Villagers walk 15km only to be turned away without care.",
+        location: "Mthatha, OR Tambo",
+        channel: "pwa_form"
+      }
+    };
+
+    function switchTab(tabId) {
+      const sections = ['dashboard', 'intake', 'simulator', 'copilot', 'impact', 'federation'];
+      sections.forEach(s => {
+        const el = document.getElementById(`section-${s}`);
+        const btn = document.getElementById(`tab-btn-${s}`);
+        if (el) el.classList.toggle('hidden', s !== tabId);
+        if (btn) {
+          if (s === tabId) {
+            btn.className = "px-4 py-1.5 rounded-lg text-xs font-semibold transition-all bg-blue-600 text-white shadow-sm";
+          } else {
+            btn.className = "px-4 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-300 hover:text-white hover:bg-slate-800";
+          }
+        }
+      });
+    }
+
+    function loadSamplePreset(key) {
+      const p = samplePresets[key];
+      if (p) {
+        document.getElementById('intake-text-input').value = p.text;
+        document.getElementById('intake-location-input').value = p.location;
+        document.getElementById('intake-channel-select').value = p.channel;
+      }
+    }
+
+    function updateBudgetSliderLabel(val) {
+      document.getElementById('sim-budget-label').innerText = `₹ ${parseFloat(val).toFixed(1)} Cr`;
+    }
+
+    // Fetch and render initial data
+    async function loadDashboardData() {
+      try {
+        const [hotspotsRes, recsRes] = await Promise.all([
+          fetch('/api/analytics/gap-hotspots'),
+          fetch('/api/recommendations')
+        ]);
+        const hotspots = await hotspotsRes.json();
+        const recs = await recsRes.json();
+        renderHotspots(hotspots.slice(0, 6));
+        renderRecommendations(recs);
+      } catch (err) {
+        console.error("Error loading dashboard data", err);
+      }
+    }
+
+    function renderHotspots(hotspots) {
+      const container = document.getElementById('hotspots-container');
+      if (!container) return;
+      container.innerHTML = hotspots.map(h => {
+        const isWater = h.sector === 'water_sanitation';
+        const color = h.gap_score > 80 ? 'text-rose-400 bg-rose-500/10 border-rose-500/30' : 'text-amber-400 bg-amber-500/10 border-amber-500/30';
+        return `
+          <div class="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800 hover:border-slate-700 transition space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="font-display font-semibold text-xs text-white">${h.district}</span>
+              <span class="text-[10px] px-2 py-0.5 rounded font-mono font-bold ${color}">${h.gap_score} / 100 Gap</span>
+            </div>
+            <div class="flex items-center justify-between text-[11px] text-slate-400">
+              <span>Sector: <strong class="text-slate-300">${h.sector.replace('_', ' ').toUpperCase()}</strong></span>
+              <span>Supply Index: <strong class="text-slate-300">${(h.supply_index*100).toFixed(0)}%</strong></span>
+            </div>
+            <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+              <div class="bg-gradient-to-r from-amber-500 to-rose-500 h-full rounded-full" style="width: ${h.gap_score}%"></div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderRecommendations(recs) {
+      const container = document.getElementById('recommendations-container');
+      if (!container) return;
+      container.innerHTML = recs.map(r => {
+        const statusBadge = r.status === 'approved' 
+          ? '<span class="text-[10px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full">Approved</span>'
+          : '<span class="text-[10px] bg-amber-500/20 text-amber-400 border border-amber-500/30 px-2 py-0.5 rounded-full">Pending Approval</span>';
+        
+        return `
+          <div class="p-4 rounded-xl bg-slate-900/70 border border-slate-800 space-y-3 hover:border-blue-500/40 transition">
+            <div class="flex items-start justify-between gap-2">
+              <h4 class="font-display font-semibold text-xs text-white leading-tight">${r.project_title}</h4>
+              ${statusBadge}
+            </div>
+            <p class="text-xs text-slate-300 line-clamp-2">${r.problem_statement}</p>
+            <div class="flex items-center justify-between text-[11px] text-slate-400 border-t border-slate-800/80 pt-2">
+              <span>Cost: <strong class="text-emerald-400">₹ ${r.estimated_cost_cr} Cr</strong></span>
+              <span>Priority: <strong class="text-blue-400 font-mono">${r.priority_score} / 100</strong></span>
+            </div>
+            <div class="flex space-x-2 pt-1">
+              <button onclick="reviewRec('${r.id}', 'approve')" class="flex-1 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-[11px] font-semibold transition">
+                Approve Project
+              </button>
+              <button onclick="reviewRec('${r.id}', 'revise')" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-semibold transition">
+                Revise
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    async function reviewRec(recId, action) {
+      try {
+        const res = await fetch(`/api/recommendations/${recId}/review`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: action,
+            reviewer_name: "Director General (DPI Oversight)",
+            notes: `Action executed via Command Centre`
+          })
+        });
+        if (res.ok) {
+          loadDashboardData();
+        }
+      } catch (e) {
+        console.error("Failed to review", e);
+      }
+    }
+
+    // Execute Multi-Agent Pipeline
+    async function executeAgentPipeline() {
+      const text = document.getElementById('intake-text-input').value;
+      const loc = document.getElementById('intake-location-input').value;
+      const channel = document.getElementById('intake-channel-select').value;
+      const btn = document.getElementById('btn-run-pipeline');
+      const statusBadge = document.getElementById('pipeline-status-badge');
+      const outputBox = document.getElementById('pipeline-output-box');
+
+      if (!text.trim()) {
+        alert("Please provide citizen text or select a voice sample!");
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerText = "Orchestrating ADK Agents...";
+      statusBadge.innerText = "Running Agents";
+      statusBadge.className = "text-[10px] px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 font-mono animate-pulse";
+
+      // Visual stage progression simulation
+      const stages = ['intake', 'language', 'classifier', 'geo', 'analyst', 'policy', 'critic', 'feedback'];
+      for (const st of stages) {
+        const el = document.getElementById(`stage-${st}`);
+        if (el) el.className = "flex items-center space-x-2 text-blue-400 font-medium";
+      }
+
+      try {
+        const res = await fetch('/api/intake/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            channel: channel,
+            raw_text: text,
+            audio_base64: channel.includes('audio') || channel.includes('voice') ? text : null,
+            reported_location: loc
+          })
+        });
+        const data = await res.json();
+
+        statusBadge.innerText = "Completed";
+        statusBadge.className = "text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-mono";
+
+        outputBox.classList.remove('hidden');
+        outputBox.innerHTML = `
+          <div class="text-emerald-400 font-bold">✔ Multi-Agent Pipeline Execution Successful (ID: ${data.request_id})</div>
+          <div><strong class="text-blue-400">Language:</strong> ${data.language.language_name} (${data.language.detected_language}) | ${data.language.dialect_notes || 'Standard'}</div>
+          <div><strong class="text-blue-400">Pivot English:</strong> "${data.language.pivot_english_text}"</div>
+          <div><strong class="text-blue-400">Taxonomy:</strong> ${data.classification.category_name} (SDG ${data.classification.sdg_goal}) | Urgency: ${data.classification.urgency}/5</div>
+          <div><strong class="text-blue-400">Location Resolved:</strong> ${data.geo.district}, ${data.geo.state_province} (${data.geo.country}) [${data.geo.resolved_lat}, ${data.geo.resolved_lng}]</div>
+          <div><strong class="text-amber-400">Scoring:</strong> Gap: ${data.analysis.gap_score}/100 | Priority: ${data.analysis.priority_score}/100</div>
+          <div><strong class="text-emerald-400">Policy Recommendation:</strong> ${data.recommendation.project_title} (Est Cost: ₹ ${data.recommendation.estimated_cost_cr} Cr)</div>
+          <div><strong class="text-indigo-400">Critic Audit:</strong> ${data.critique.notes}</div>
+          <div class="p-3 mt-2 rounded bg-blue-950/40 border border-blue-800 text-blue-200">
+            <strong>Citizen SMS Notification Loop:</strong><br/>
+            "${data.citizen_feedback.message}"
+          </div>
+        `;
+        // Refresh dashboard recommendations
+        loadDashboardData();
+      } catch (err) {
+        statusBadge.innerText = "Error";
+        statusBadge.className = "text-[10px] px-2 py-0.5 rounded bg-rose-500/20 text-rose-400 font-mono";
+        alert("Pipeline invocation failed: " + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          Run Google ADK Multi-Agent Pipeline
+        `;
+      }
+    }
+
+    // What-If Simulation
+    async function triggerSimulation() {
+      const region = document.getElementById('sim-region-select').value;
+      const sector = document.getElementById('sim-sector-select').value;
+      const budget = parseFloat(document.getElementById('sim-budget-slider').value);
+      const container = document.getElementById('sim-results-container');
+
+      try {
+        const res = await fetch('/api/simulation/what-if', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            admin_unit_id: region,
+            sector: sector,
+            additional_budget_cr: budget
+          })
+        });
+        const data = await res.json();
+
+        container.innerHTML = `
+          <div class="space-y-4">
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div class="p-3 rounded-lg bg-slate-950/80 border border-slate-800">
+                <span class="text-[10px] text-slate-400 uppercase">Baseline Supply</span>
+                <p class="text-lg font-bold text-white">${(data.baseline_supply_index*100).toFixed(0)}%</p>
+              </div>
+              <div class="p-3 rounded-lg bg-slate-950/80 border border-slate-800">
+                <span class="text-[10px] text-slate-400 uppercase">Simulated Supply</span>
+                <p class="text-lg font-bold text-emerald-400">${(data.simulated_supply_index*100).toFixed(0)}%</p>
+              </div>
+              <div class="p-3 rounded-lg bg-slate-950/80 border border-slate-800">
+                <span class="text-[10px] text-slate-400 uppercase">Gap Reduction</span>
+                <p class="text-lg font-bold text-blue-400">-${data.gap_reduction_pct}%</p>
+              </div>
+              <div class="p-3 rounded-lg bg-slate-950/80 border border-slate-800">
+                <span class="text-[10px] text-slate-400 uppercase">New Beneficiaries</span>
+                <p class="text-lg font-bold text-amber-400">${data.projected_additional_beneficiaries.toLocaleString()}</p>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-xl bg-blue-950/30 border border-blue-900/50 text-xs text-slate-200">
+              <strong class="text-blue-300">Micro-Economic Simulation Summary:</strong>
+              <p class="mt-1">${data.recommendation_summary}</p>
+            </div>
+          </div>
+        `;
+      } catch (err) {
+        alert("Simulation failed: " + err.message);
+      }
+    }
+
+    // Copilot
+    async function askCopilotPreset(q) {
+      document.getElementById('copilot-input').value = q;
+      sendCopilotQuery();
+    }
+
+    async function sendCopilotQuery() {
+      const input = document.getElementById('copilot-input');
+      const query = input.value.trim();
+      if (!query) return;
+
+      const history = document.getElementById('copilot-chat-history');
+      
+      // User message
+      history.innerHTML += `
+        <div class="flex justify-end">
+          <div class="p-3 rounded-xl bg-blue-600 text-white max-w-lg">
+            ${query}
+          </div>
+        </div>
+      `;
+      input.value = "";
+      history.scrollTop = history.scrollHeight;
+
+      try {
+        const res = await fetch('/api/copilot/query', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query: query })
+        });
+        const data = await res.json();
+
+        history.innerHTML += `
+          <div class="flex justify-start">
+            <div class="p-4 rounded-xl bg-slate-900 border border-slate-800 text-slate-200 max-w-2xl space-y-2">
+              <div class="font-display font-semibold text-blue-400 flex items-center space-x-1.5">
+                <span class="h-2 w-2 rounded-full bg-blue-400"></span>
+                <span>JanSetu Grounded Response</span>
+              </div>
+              <p class="text-xs leading-relaxed">${data.answer}</p>
+              <div class="border-t border-slate-800 pt-2 text-[11px] text-slate-400">
+                <strong class="text-slate-300">Grounded Evidence:</strong>
+                <ul class="list-disc list-inside mt-1 space-y-0.5">
+                  ${data.grounded_evidence.map(e => `<li>${e}</li>`).join('')}
+                </ul>
+              </div>
+            </div>
+          </div>
+        `;
+        history.scrollTop = history.scrollHeight;
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    // Load Impact Metrics
+    async function loadImpactMetrics() {
+      try {
+        const res = await fetch('/api/impact/metrics');
+        const list = await res.json();
+        const container = document.getElementById('impact-metrics-container');
+        if (!container) return;
+        container.innerHTML = list.map(m => `
+          <div class="p-5 rounded-xl bg-slate-900/60 border border-slate-800 space-y-3">
+            <div class="flex items-start justify-between">
+              <div>
+                <h4 class="font-display font-semibold text-xs text-white">${m.title}</h4>
+                <p class="text-[11px] text-slate-400">${m.district}</p>
+              </div>
+              <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 uppercase font-mono">${m.status}</span>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-2 text-xs pt-1">
+              <div class="p-2.5 rounded bg-slate-950/70 border border-slate-800">
+                <span class="text-[10px] text-slate-400 block">Complaint Volume</span>
+                <span class="text-slate-400 line-through text-[11px]">${m.pre_complaint_monthly_volume}/mo</span>
+                <span class="text-emerald-400 font-bold ml-1">→ ${m.post_complaint_monthly_volume}/mo</span>
+                <div class="text-[10px] text-emerald-400 font-semibold mt-0.5">-${m.complaint_reduction_pct}% drop</div>
+              </div>
+
+              <div class="p-2.5 rounded bg-slate-950/70 border border-slate-800">
+                <span class="text-[10px] text-slate-400 block">Citizen Sentiment</span>
+                <span class="text-rose-400 text-[11px]">${m.pre_citizen_sentiment}</span>
+                <span class="text-emerald-400 font-bold ml-1">→ ${m.post_citizen_sentiment > 0 ? '+' : ''}${m.post_citizen_sentiment}</span>
+                <div class="text-[10px] text-blue-400 font-semibold mt-0.5">+${(m.infrastructure_index_gain*100).toFixed(0)}% Supply Index</div>
+              </div>
+            </div>
+          </div>
+        `).join('');
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    // Load BRICS Federation
+    async function loadFederationData() {
+      try {
+        const res = await fetch('/api/federation/nodes');
+        const nodes = await res.json();
+        const tbody = document.getElementById('federation-table-body');
+        if (!tbody) return;
+        tbody.innerHTML = nodes.map(n => `
+          <tr class="hover:bg-slate-900/50">
+            <td class="p-3 font-semibold text-white flex items-center space-x-2">
+              <span>${n.country}</span>
+            </td>
+            <td class="p-3 text-slate-300">${n.jurisdiction}</td>
+            <td class="p-3 font-mono text-[11px] text-slate-400">${n.compliance_law}</td>
+            <td class="p-3 text-blue-400 font-mono">${n.anonymized_voice_signals_shared.toLocaleString()} signals</td>
+            <td class="p-3">
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold ${n.node_status==='active' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-slate-800 text-slate-400'} uppercase">
+                ${n.node_status}
+              </span>
+            </td>
+          </tr>
+        `).join('');
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    // Initialization
+    window.addEventListener('DOMContentLoaded', () => {
+      loadSamplePreset('bundeli');
+      loadDashboardData();
+      loadImpactMetrics();
+      loadFederationData();
+    });
+  </script>
+</body>
+</html>

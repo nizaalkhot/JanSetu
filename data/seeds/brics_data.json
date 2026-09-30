@@ -1,0 +1,158 @@
+{
+  "admin_units": [
+    {
+      "id": "IN-UP-BAN",
+      "country": "India",
+      "country_code": "IN",
+      "state_province": "Uttar Pradesh",
+      "district": "Banda (Bundelkhand)",
+      "lat": 25.4756,
+      "lng": 80.3347,
+      "population": 1799410,
+      "equity_weight": 1.4,
+      "demographic_profile": "Rural agrarian, drought-prone, high scheduled caste & marginal farmer population",
+      "infrastructure_indices": {
+        "water_sanitation": 0.22,
+        "healthcare": 0.35,
+        "transport_roads": 0.48,
+        "education": 0.52,
+        "electricity_energy": 0.45,
+        "digital_connectivity": 0.38
+      },
+      "budget_allocations": {
+        "water_sanitation": { "allocated_cr": 45.0, "spent_cr": 18.5, "headroom_cr": 26.5 },
+        "healthcare": { "allocated_cr": 30.0, "spent_cr": 22.0, "headroom_cr": 8.0 },
+        "transport_roads": { "allocated_cr": 60.0, "spent_cr": 51.0, "headroom_cr": 9.0 }
+      }
+    },
+    {
+      "id": "IN-MH-BEE",
+      "country": "India",
+      "country_code": "IN",
+      "state_province": "Maharashtra",
+      "district": "Beed (Marathwada)",
+      "lat": 18.9894,
+      "lng": 75.7601,
+      "population": 2585049,
+      "equity_weight": 1.35,
+      "demographic_profile": "Rain-shadow region, migratory sugarcane cutters, rural healthcare distress",
+      "infrastructure_indices": {
+        "water_sanitation": 0.28,
+        "healthcare": 0.30,
+        "transport_roads": 0.58,
+        "education": 0.61,
+        "electricity_energy": 0.55,
+        "digital_connectivity": 0.49
+      },
+      "budget_allocations": {
+        "water_sanitation": { "allocated_cr": 55.0, "spent_cr": 24.0, "headroom_cr": 31.0 },
+        "healthcare": { "allocated_cr": 40.0, "spent_cr": 15.0, "headroom_cr": 25.0 },
+        "transport_roads": { "allocated_cr": 50.0, "spent_cr": 44.0, "headroom_cr": 6.0 }
+      }
+    },
+    {
+      "id": "BR-PE-PET",
+      "country": "Brazil",
+      "country_code": "BR",
+      "state_province": "Pernambuco",
+      "district": "Petrolina (Sertão)",
+      "lat": -9.3891,
+      "lng": -40.5028,
+      "population": 386786,
+      "equity_weight": 1.3,
+      "demographic_profile": "Semi-arid Caatinga biome, rural agrarian periphery dependent on water cisterns",
+      "infrastructure_indices": {
+        "water_sanitation": 0.31,
+        "healthcare": 0.42,
+        "transport_roads": 0.52,
+        "education": 0.59,
+        "electricity_energy": 0.65,
+        "digital_connectivity": 0.44
+      },
+      "budget_allocations": {
+        "water_sanitation": { "allocated_cr": 28.0, "spent_cr": 9.5, "headroom_cr": 18.5 },
+        "healthcare": { "allocated_cr": 35.0, "spent_cr": 21.0, "headroom_cr": 14.0 },
+        "transport_roads": { "allocated_cr": 42.0, "spent_cr": 38.0, "headroom_cr": 4.0 }
+      }
+    },
+    {
+      "id": "ZA-EC-ORT",
+      "country": "South Africa",
+      "country_code": "ZA",
+      "state_province": "Eastern Cape",
+      "district": "OR Tambo District",
+      "lat": -31.5898,
+      "lng": 28.7844,
+      "population": 1451964,
+      "equity_weight": 1.45,
+      "demographic_profile": "Deeply rural former homeland area, mountainous topography, critical school sanitation need",
+      "infrastructure_indices": {
+        "water_sanitation": 0.19,
+        "healthcare": 0.29,
+        "transport_roads": 0.34,
+        "education": 0.41,
+        "electricity_energy": 0.51,
+        "digital_connectivity": 0.33
+      },
+      "budget_allocations": {
+        "water_sanitation": { "allocated_cr": 32.0, "spent_cr": 11.0, "headroom_cr": 21.0 },
+        "healthcare": { "allocated_cr": 25.0, "spent_cr": 16.0, "headroom_cr": 9.0 },
+        "transport_roads": { "allocated_cr": 38.0, "spent_cr": 29.0, "headroom_cr": 9.0 }
+      }
+    }
+  ],
+  "sample_citizen_voices": [
+    {
+      "id": "REQ-1001",
+      "channel": "whatsapp_audio",
+      "language": "hi",
+      "dialect": "Bundeli/Hindi",
+      "original_text": "हमार गांव तिंदवारी में तीन महीने से हैंडपंप खराब पड़ा बा। पानी के लिए तीन किलोमीटर दूर तालाब जाना पड़ता है, बच्चे बीमार हो रहे हैं। कोई अधिकारी नहीं सुन रहा।",
+      "english_pivot": "In our village Tindwari, the handpump has been broken for three months. We have to walk three kilometres to the pond for water, children are getting sick. No official is listening.",
+      "admin_unit_id": "IN-UP-BAN",
+      "village_landmark": "Tindwari, Banda",
+      "category": "water_sanitation",
+      "urgency": 5,
+      "sentiment": -0.85
+    },
+    {
+      "id": "REQ-1002",
+      "channel": "telegram",
+      "language": "hi",
+      "dialect": "Hinglish",
+      "original_text": "Banda Naraini road pe bahut bade bade potholes ho gaye hain. Last week ek pregnant woman ko hospital le jaate waqt accident hote hote bacha. Urgent repairs chahiye.",
+      "english_pivot": "There are massive potholes on the Banda-Naraini road. Last week an accident almost happened while taking a pregnant woman to the hospital. Urgent road repairs needed.",
+      "admin_unit_id": "IN-UP-BAN",
+      "village_landmark": "Naraini Road, Banda",
+      "category": "transport_roads",
+      "urgency": 4,
+      "sentiment": -0.7
+    },
+    {
+      "id": "REQ-1003",
+      "channel": "ivr_voice",
+      "language": "pt",
+      "dialect": "Nordestino / Brazilian Portuguese",
+      "original_text": "Aqui no sítio perto de Petrolina, o caminhão-pipa não aparece há mais de vinte dias. A cisterna comunitária secou completamente e o posto de saúde está sem água potável.",
+      "english_pivot": "Here at the rural site near Petrolina, the water tanker truck has not arrived for over twenty days. The community cistern has completely dried up and the health clinic has no potable water.",
+      "admin_unit_id": "BR-PE-PET",
+      "village_landmark": "Rural Sítio, Petrolina",
+      "category": "water_sanitation",
+      "urgency": 5,
+      "sentiment": -0.9
+    },
+    {
+      "id": "REQ-1004",
+      "channel": "pwa_form",
+      "language": "en",
+      "dialect": "South African English / isiXhosa context",
+      "original_text": "Mthatha rural clinic has only one sister nurse and no antiretroviral and hypertension medicines in stock. Villagers walk 15km only to be turned away without care.",
+      "english_pivot": "Mthatha rural clinic has only one sister nurse and no antiretroviral and hypertension medicines in stock. Villagers walk 15km only to be turned away without care.",
+      "admin_unit_id": "ZA-EC-ORT",
+      "village_landmark": "Mthatha Sub-district, OR Tambo",
+      "category": "healthcare",
+      "urgency": 4,
+      "sentiment": -0.8
+    }
+  ]
+}
